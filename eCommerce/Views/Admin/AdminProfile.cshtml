@@ -1,0 +1,114 @@
+﻿@model eCommerce.Models.AdminVM.MostWantedProductsVM
+
+
+<link rel="stylesheet" href="~/css/myProfile.css" />
+<link rel="stylesheet" href="~/css/cart.css" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Admin Profile
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-4">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="AdminAddCategoryPick">Add a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="SoftDeleteProduct">Delete a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="UserAccount" asp-action="Register">Add a new admin</a>
+                    </li>
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Most Wanted products -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        <p class="widget-title mb-3">Most Wanted Products</p>
+
+                        @if (Model.MostWanted.Count != 0)
+                        {
+                            <div class="container">
+                                <div id="basket-article-list">
+                                    <div class="basket">
+                                        <table border="0">
+                                            <tbody>
+                                                <tr>
+                                                    <th colspan="2">Product</th>
+                                                    <th>Total sales</th>
+                                                </tr>
+                                                @for (int index = 0; index < Model.MostWanted.Count; index++)
+                                                {
+                                                    <!-- Products -->
+                                                    <tr class="basket-article toDelete">
+                                                        <!-- Product Image -->
+                                                        <td class="image">
+                                                            <div class="stackimage-wrapper stackimage-noStack stackimage-singleImage stackimage-default">
+                                                                <div class="stackimage stackimage-noStack stackimage-singleImage stackimage-noStack-singleImage d-flex justify-content-center">
+                                                                    <a asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                                       asp-route-productId="@Model.MostWanted[index].ProductId">
+                                                                        <img class="card-img" alt="" src="@Model.MostWanted[index].ProductImage" style="height:60px;width:auto;"/>
+                                                                    </a>
+                                                                </div>
+
+                                                            </div>
+                                                        </td>
+                                                        <!-- Product Description -->
+                                                        <td class="article-body rs-text">
+                                                            <div class="title">
+                                                                <div><p class="mb-2">@Model.MostWanted[index].ProductName</p></div>
+                                                            </div>
+                                                            <div><p>Product id: @Model.MostWanted[index].ProductId</p></div>
+                                                        </td>
+
+                                                        <!-- Quantity -->
+                                                        <td class="amount">
+                                                            @Model.MostWanted[index].ProductsSold
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>Not even a product bought yet!</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

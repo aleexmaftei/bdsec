@@ -1,0 +1,64 @@
+﻿body {
+    background-color: #f7f7f7;
+}
+
+.logo {
+    margin-top: 8px;
+    margin-bottom: -15px;
+}
+
+.title {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+.input-wrapper {
+    width: 75%;
+}
+
+form {
+    margin-top: 15px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 1px 2px 5px #ccc;
+}
+
+input {
+    margin-top:-4px;
+}
+
+.form-group {
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    background: #fff;
+    border-radius: 1.45rem;
+}
+
+.side-by-side {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
+label {
+    margin-bottom: 0.2rem;
+    font-size: 15px;
+    color: #495057;
+    margin-left: 0.5rem;
+    font-size: 16px;
+    
+}
+
+.subheader-text {
+    font-size: 11px;
+    margin-left: 15px;
+    margin-bottom: -15px;
+    margin-top: 20px;
+    color: dimgray;
+}
+

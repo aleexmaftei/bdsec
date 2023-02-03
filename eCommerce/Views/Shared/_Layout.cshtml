@@ -1,0 +1,214 @@
+﻿@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortissimo</title>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="~/js/cart.js"></script>
+    <script src="~/js/login.js"></script>
+    <script src="~/js/search.js"></script>
+
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/css/cart.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+
+</head>
+
+    <body class="lr-everything-centered responsive">
+        <input type="hidden" id="cartUrl" data-cart-action-url="@Url.Action("JsCartModalView", "Cart")" />
+        <input type="hidden" id="removeProductCartUrl" data-remove-action-url="@Url.Action("JsRemoveProductFromCart", "Cart")" />
+        <input type="hidden" id="loginUrl" data-login-url="@Url.Action("Login", "UserAccount")" />
+        <input type="hidden" id="searchUrl" data-search-url="@Url.Action("Search", "ProductDetails")" />
+        
+        <header class="eCommerce-page page-content-wrapper">
+            <nav class="rs-header">
+                <div class="rs-navigation search-view">
+
+                    <!-- search box-->
+                    <div class="rs-searchbox">
+                        <div class="input-wrapper focus empty">
+                            <input placeholder="Search" type="search" autocomplete="off" id="search" />
+                        </div>
+                    </div>
+
+                    <!-- buttons -->
+                    <div class="rs-buttons">
+                        <ul class="buttons-list list-unstyled">
+                            <li style="margin-top:14px;">
+                                <a class="" asp-controller="Home" asp-action="Index"><img class="" src="~/static/logo.png"/></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rs-user-navigation">
+                        <div class="link-list">
+                            <!-- right button -->
+                            <div class="list-entry">
+                                @if (CurrentUser.IsAuthenticated)
+                                {
+                                    <div class="float-left mr-4 shopping-button">
+                                        <a class="cartBtn"
+                                           data-toggle="modal" data-target="#modalCartRight"><span class="fas fa-shopping-cart fa-2x" style="margin-top:18px"></span></a>
+                                    </div>
+
+                                    <div class="btn-group user-action-button">
+                                        <a asp-controller="MyProfile" asp-action="Index"
+                                                type="button" class="btn btn-danger">@CurrentUser.FirstName @CurrentUser.LastName
+                                            <span class="far fa-user"></span> 
+                                        </a>
+                                        <button type="button" class="btn btn-danger dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" asp-controller="MyProfile" asp-action="Index">
+                                                My profile
+                                            </a>
+                                            @if (CurrentUser.IsAdmin)
+                                            {
+                                                <a class="dropdown-item" asp-controller="Admin" asp-action="AdminProfile">Admin Actions</a>
+                                            }
+
+                                            <a asp-controller="Cart" asp-action="Index" class="dropdown-item">View Cart</a>
+                                            
+                                            <div class="dropdown-divider"></div>
+
+                                            <a class="dropdown-item" asp-controller="UserAccount" asp-action="Logout">Log Out</a>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <ul class="btn-group list-unstyled">
+                                        <li class="pl-2 mb-2 mb-md-0">
+                                            <button type="button" data-toggle="modal" data-target="#modalLogin"
+                                                    class="btn btn-outline-primary btn-md btn-rounded btn-navbar">Sign in</button>
+                                        </li>
+
+                                        <li class="pl-2 mb-2 mb-md-0">
+                                            <a asp-controller="UserAccount" asp-action="Register" type="button"
+                                               class="btn btn-outline-info btn-md btn-rounded btn-navbar">Sign up</a>
+                                        </li>
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- categories list navbar -->
+                <div class="categories" >
+                    <div class="rs-spandex">
+                        <ul class="list">
+                            <div class="rail">
+                                <li class="item"><a asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="1" class="button-nav">Guit/Bass</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="2">Drums</a></li>
+                                
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="4">Studio</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="5">Wind</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="6">PA</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="7">Dj</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-categoryId="8">Trad</a></li>
+                                <li class="item"><a class="button-nav"
+                                                    asp-controller="Home" asp-action="Category"
+                                                   asp-route-id="9">Accessories</a></li>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    
+    
+        <div class="eCommerce-page page-content-wrapper">
+            <main role="main" class="full grid-container">
+                @RenderBody()
+            </main>
+        </div>
+   
+        <!-- Modal Cart -->
+        <div class="modal fade" id="modalCartRight" tabindex="-1" role="dialog" aria-labelledby="modalCart" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title w-100" id="modalCart">Your shopping list</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="far fa-times-circle"></span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body insertModalBody">
+                        
+                    </div>
+
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        <a asp-controller="Cart" asp-action="Index" 
+                                class="btn btn-primary">Finish order</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Login -->
+        <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLogin" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    
+                    <div class="modal-header modal-header-login" style="padding:20px 20px;">
+                        <h4 class="modal-title h4-login"><span class="fas fa-sign-in-alt fa-sm"></span>  Login </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="far fa-times-circle"></span></button>
+                    </div>
+
+                    <div class="modal-body" style="padding:40px 50px;">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="username"><span class="fas fa-user fa-sm"></span> Email</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password"><span class="fas fa-key fa-sm"></span> Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter password">
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-block loginBtn">
+                            <span class="fas fa-power-off fa-sm" aria-hidden="true"></span> Login</button>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer d-flex justify-content-between">
+                        <button type="submit" class="btn btn-danger" data-dismiss="modal" > Cancel</button>
+                        <p>Not a member? <a asp-controller="UserAccount" asp-action="Register">Sign Up</a></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        @RenderSection("Scripts", required: false)
+    </body>
+</html>

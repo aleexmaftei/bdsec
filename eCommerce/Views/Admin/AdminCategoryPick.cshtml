@@ -1,0 +1,84 @@
+﻿@model eCommerce.Models.ProductVM.ProductCategoryVM
+
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Add a product 
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-3">
+        <div class="col-2 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="Admin" asp-action="AdminAddCategoryPick">Add a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="SoftDeleteProduct">Delete a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="RegisterAdmin">Add a new admin</a>
+                    </li>
+
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Choose category -->
+        <div class="col-10">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        <p class="widget-title mb-3">Choose a category to add a product to</p>
+                        
+                        <div class="container d-flex justify-content-center">
+                            <div class="row w-100">
+                                @foreach (var productCategory in Model.ProductCategories)
+                                {
+                                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 d-flex justify-content-center mb-4 mt-2">
+                                        <a class="category w-100"
+                                           asp-controller="Admin" asp-action="SubcategoryPick"
+                                           asp-route-parentCategoryId="@productCategory.ProductCategoryId">
+                                            <div class="d-flex justify-content-center img-thumbnail w-100">
+                                                <div class="w-50">
+                                                    <img style="height:100px;width:auto;" class="img-fluid" alt="" src="@productCategory.ProductCategoryImage" />
+                                                </div>
+                                                <div class="align-self-center w-50">
+                                                    <div class="font-weight-normal">
+                                                        @productCategory.ProductCategoryName
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

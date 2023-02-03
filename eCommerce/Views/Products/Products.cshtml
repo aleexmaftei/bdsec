@@ -1,0 +1,554 @@
+﻿@model eCommerce.Models.ProductVM.ProductsWithValues.AllProductsVM
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<script src="~/js/products/filter.js"></script>
+<script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+
+<link rel="stylesheet" href="~/css/products.css" />
+<link rel="stylesheet" href="~/css/filterProducts.css" />
+
+<input type="hidden" id="deleteActionUrl" data-delete-action-url="@Url.Action("SoftDeleteProduct", "Admin")" />
+<input type="hidden" id="updateActionUrl" data-update-action-url="@Url.Action("UpdateProduct", "Admin")" />
+<input type="hidden" id="addProductToCartUrl" data-add-product-to-cart-url="@Url.Action("AddProductToCart", "Cart")" />
+
+<input type="hidden" id="applyFiltersUrl" data-apply-filters-url="@Url.Action("ListProductDetailsByCategory", "ProductDetails")" />
+
+<div class="row">
+    <div class="grid-container">
+        <div class="row">
+            <!-- Filter bar -->
+            <div class="col-3 thin grid-section">
+                <div class="rs-sidebar-box">
+                    <section class="filters">
+                        <h5 class="mb-3 d-flex justify-content-center">Filters</h5>
+                        
+                        <!-- Manufacturers -->
+                        <section filter="manufacturers">
+                            <h6 class="font-weight-bold mb-3 mt-2">
+                                Manufacturers
+                            </h6>
+                            
+                            <div class="form-check pl-0 mb-1">
+                                <input type="checkbox" class="form-check-input filter-option filled-in manufacturerInput" manufacturer="@Model.Manufacturers[0].ManufacturerName" id="@Model.Manufacturers[0].ManufacturerName" />
+                                <label class="form-check-label small text-uppercase card-link-secondary d-flex justify-content-start" for="@Model.Manufacturers[0].ManufacturerName">@Model.Manufacturers[0].ManufacturerName</label>
+                            </div>
+
+                            <div class="form-check pl-0 mb-1">
+                                <input type="checkbox" class="filter-option form-check-input filled-in manufacturerInput" manufacturer="@Model.Manufacturers[1].ManufacturerName" id="@Model.Manufacturers[1].ManufacturerName" />
+                                <label class="form-check-label small text-uppercase card-link-secondary d-flex justify-content-start" for="@Model.Manufacturers[1].ManufacturerName">@Model.Manufacturers[1].ManufacturerName</label>
+                            </div>
+
+                            <div class="collapse" id="collapse">
+                                @for (int index = 2; index < Model.Manufacturers.Count; index++)
+                                {
+                                    <div class="form-check pl-0 mb-1">
+                                        <input type="checkbox" class="filter-option form-check-input filled-in manufacturerInput" manufacturer="@Model.Manufacturers[index].ManufacturerName" id="@Model.Manufacturers[index].ManufacturerName" />
+                                        <label class="form-check-label small text-uppercase card-link-secondary d-flex justify-content-start" for="@Model.Manufacturers[index].ManufacturerName">@Model.Manufacturers[index].ManufacturerName</label>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <hr class="mb-0" />
+                            <a class="p-0 btn btn-link text-muted d-flex justify-content-center" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
+                                More
+                            </a>
+                        </section>
+
+                        <!-- Price -->
+                        <section filter="price">
+                            <h6 class="font-weight-bold mb-2 pt-3">
+                                Price
+                            </h6>
+                            <div class="pl-1">
+                                <div class="form-check mb-2">
+                                    <input type="radio" checked class="filter-option form-check-input" id="all" name="price"/>
+                                    <label class="form-check-label small card-link-secondary" for="all">All Prices</label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input price="50-199" type="radio" class="filter-option form-check-input" id="50_199" name="price" />
+                                    <label class="form-check-label small card-link-secondary"
+                                           for="50_199">$50 to $199</label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input price="200-399" type="radio" class="filter-option form-check-input" id="200_399" name="price" />
+                                    <label class="form-check-label small card-link-secondary"
+                                           for="200_399">$200 to $399</label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input price="400-599" type="radio" class="filter-option form-check-input" id="400_599" name="price" />
+                                    <label class="form-check-label small card-link-secondary"
+                                           for="400_599">$400 to $599</label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input price="600" type="radio" class="filter-option form-check-input" id="600" name="price" />
+                                    <label class="form-check-label small card-link-secondary"
+                                           for="600">$600+</label>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-primary" id="applyFilters" data-category-id="@Model.CategoryId">
+                                Apply filters
+                            </a>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+            
+            
+            <div class="col-9">
+                <!-- Product List -->
+                <div class="phat grid-section" id="productList">
+                    <!-- HEADER -->
+                    <div class="rs-search-dir rs-search-header">
+                        @if (@Model.Allproducts[0].AllPropertiesWithValues.Count() == 13)
+                        {
+                            <h1>@Model.Allproducts[0].AllPropertiesWithValues[0].Value</h1>
+                        }
+                        else
+                        {
+                            <h1>Product List</h1>
+                        }
+                        <br />
+                    </div>
+                    <!-- Products -->
+                    <div class="rs-search-dir rs-search-list">
+                        <div class="rs-search-list-react"></div>
+                        <div id="resultsContainer" class="results">
+                            <div id="defaultResultPage" class="pr-4 response articles-list">
+                                @foreach (var product in Model.Allproducts)
+                                {
+                                    <div class="extensible-article list-view compare parent divToDelete product">
+                                        <!-- Product Image -->
+                                        <div class="left">
+                                            <div class="product-image image-block">
+                                                <a class="article-link link"
+                                                   asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                   asp-route-productId="@product.ProductId">
+                                                    <img class="image" src="@product.ProductImage"
+                                                         style="height:190px;width:auto;" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- Product Details-->
+                                        <div class="right">
+                                            <div class="top">
+                                                <!-- Product Name + brand-->
+                                                <div class="head">
+                                                    <a class="article-link link"
+                                                       asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                       asp-route-productId="@product.ProductId">
+
+                                                        <div class="title-block link-group">
+                                                            <span class="manufacturer">@product.ManufacturerName</span>
+                                                            <span class="model">@product.ProductName</span>
+                                                        </div>
+
+                                                        <div class="subline">
+                                                            <div class="subtitle-block">
+                                                                @if (@product.AllPropertiesWithValues.Count() == 13)
+                                                                {
+                                                                    <div>@product.AllPropertiesWithValues[0].Value  <span class="fas fa-chevron-right fa-xs"></span>  @product.AllPropertiesWithValues[1].Value</div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div>
+                                                                        @product.ManufacturerName
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="features-block">
+                                                            <ul class="prod-features">
+
+
+                                                                @if (@product.AllPropertiesWithValues.Count() == 13)
+                                                                {
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[4].PropertyName: @product.AllPropertiesWithValues[4].Value</div>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[6].PropertyName: @product.AllPropertiesWithValues[6].Value</div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[5].PropertyName: @product.AllPropertiesWithValues[5].Value</div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[12].PropertyName: @product.AllPropertiesWithValues[12].Value</div>
+                                                                    </li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    
+                                                                    @foreach (var value in product.AllPropertiesWithValues)
+                                                                    {
+                                                                        <li>
+                                                                            <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @value.PropertyName: @value.Value</div>
+                                                                        </li>
+                                                                    }
+                                                                }
+
+                                                            </ul>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <!-- Price -->
+                                                <div class="body">
+                                                    <div class="price-block">
+                                                        <div class="primary">
+                                                            <span class="article-basketlink">@product.ProductPrice $</span>
+                                                        </div>
+                                                    </div>
+
+                                                    @if (product.AllPropertiesWithValues.Count() != 1)
+                                                    {
+                                                        <div class="manufacturer-block">
+                                                            <div class="rs-tooltip-trigger rs-tooltip-ready">
+                                                                <a class="link" title="">
+                                                                    <img class="image" src="@product.ManufacturerLogo" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                <div class="tail">
+                                                    <div class="availability-block">
+                                                        <div class="rs-layover-trigger tr-availability-layover rs-tooltip-ready">
+                                                            <a style="cursor:default;">
+                                                                @if (product.Quantity != 0)
+                                                                {
+                                                                    <div class="tr-prod-availability tr-prod-availability-in">
+                                                                        <span class="fas fa-battery-full fa-1x"></span>  In stock
+
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="tr-prod-availability tr-prod-availability-out">
+                                                                        <span class="fas fa-battery-empty fa-1x"></span>  Out of Stock
+                                                                    </div>
+                                                                }
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Admin Buttons -->
+                                                    @if (CurrentUser.IsAdmin == true)
+                                                    {
+                                                        <div id="admin-buttons" class="d-flex justify-content-center">
+                                                            <button type="button" data-target="#modalBox" data-toggle="modal"
+                                                                    data-product-id="@product.ProductId"
+                                                                    class="updateBtn button as-plain btn">
+                                                                Update
+                                                            </button>
+
+                                                            <button type="button" data-product-id="@product.ProductId"
+                                                                    class="deleteBtn button as-plain btn">
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    }
+
+                                                    @if (CurrentUser.IsAuthenticated)
+                                                    {
+                                                        <div class="controls-block">
+                                                            <div class="item add-to-basket">
+                                                                <form method="post">
+                                                                    <button type="submit" data-product-id="@product.ProductId" data-quantity-to-buy="1"
+                                                                            class="button as-plain btn float-right addToCart">
+                                                                        <span class="fas fa-shopping-cart pr-2"></span>Add to Cart
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="controls-block">
+                                                            <div class="item add-to-basket">
+                                                                <a class="btn button as-plain float-right addToCart" style="cursor:not-allowed;">
+                                                                    Sign In to add
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Product Update-->
+<div class="modal fade" id="modalBox" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Update selected product</h4>
+                <button type="button" class="close closeBtnModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label asp-for="AdminUpdateDetails.ProductName" class="control-label"></label>
+                        <input asp-for="AdminUpdateDetails.ProductName" id="productNameInput" class="form-control" />
+                        <span asp-validation-for="AdminUpdateDetails.ProductName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group insertAfterThis">
+                        <label asp-for="AdminUpdateDetails.Quantity" class="control-label"></label>
+                        <input asp-for="AdminUpdateDetails.Quantity" id="quantityInput" class="form-control" />
+                        <span asp-validation-for="AdminUpdateDetails.Quantity" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary closeBtnModal">Close</button>
+
+                    <input type="submit" value="Update product"
+                           class="btn btn-primary updateBtnModal" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    // for delete button
+    var deleteFunction = function (event) {
+        var btn = event.target;
+        var productId = $(btn).data('product-id');
+        var divToDelete = $(btn).closest(".divToDelete");
+        var deleteUrl = $('#deleteActionUrl').data('delete-action-url');
+
+        $(btn).removeAttr('enabled');
+        $(btn).attr('disabled', 'disabled');
+
+        $.ajax({
+            type: 'POST',
+            url: deleteUrl,
+            data: {
+                productId: productId
+            },
+            success: function (response) {
+                if (response && response.flag) {
+                    $(divToDelete).fadeOut(425, function () {
+                        $(divToDelete).remove();
+                        });
+                }
+                else {
+                    alert("Error");
+                }
+
+                // unblock the button
+                $(event.target).removeAttr('disabled');
+                $(event.target).attr('enabled', 'enabled');
+            },
+            error: function (error) {
+            }
+        });
+    };
+
+    var globalModelToDisplay = null;
+    var displayCurrentProductForUpdate = function (modelToDisplay) {
+        var productName = modelToDisplay.productName;
+        var quantity = modelToDisplay.quantity;
+        var productPropertiesWithValues = modelToDisplay.productPropertiesWithValues;
+
+        document.getElementById('productNameInput').value = productName;
+        document.getElementById('quantityInput').value = quantity;
+
+        var isGenerated = document.getElementsByClassName('isGenerated').length;
+        if (!isGenerated) {
+            $.each(productPropertiesWithValues, function (index, value) {
+
+                var htmlCode = $([
+                    "<div class='form-group isGenerated'>",
+                    "   <label class='control-label'>" + value.propertyName + "</label>",
+                    "   <input class='form-control' id='" + value.propertyName + "' value='" + value.detailValue + "'/>",
+                    "   <span class='text-danger'></span>",
+                    "</div>"
+                ].join("\n"));
+
+                $(".insertAfterThis").after(htmlCode);
+            });
+        }
+
+        globalModelToDisplay = modelToDisplay;
+    };
+
+    // close modal
+    function closeModal() {
+        $('#modalBox').modal('hide');
+    };
+
+    // for update button from modal
+    var updateDatabase = function (event) {
+        if (globalModelToDisplay == null) {
+            alert("Select a product to update first!")
+            return;
+        }
+
+        var btn = event.target;
+        $(btn).removeAttr('enabled');
+        $(btn).attr('disabled', 'disabled');
+
+        var productName = document.getElementById('productNameInput').value;
+        var quantity = parseInt(document.getElementById('quantityInput').value, 10);
+
+        globalModelToDisplay.productName = productName;
+        globalModelToDisplay.quantity = quantity;
+
+        $.each(globalModelToDisplay.productPropertiesWithValues, function (index, value) {
+            var currentPropertyName = value.propertyName;
+            var currentProductDetail = document.getElementById(currentPropertyName).value;
+
+            globalModelToDisplay.productPropertiesWithValues[index].detailValue = currentProductDetail;
+        });
+
+        var updateUrlPost = $('#updateActionUrl').data('update-action-url');
+        $.ajax({
+            type: 'POST',
+            url: updateUrlPost,
+            data: {
+                model: globalModelToDisplay
+            },
+            success: function (response) {
+                if (response && response.flag) {
+                    closeModal();
+                    location.reload(true);
+                }
+                else {
+                    alert("Error");
+                }
+
+                $(btn).removeAttr('disabled');
+                $(btn).attr('enabled', 'enabled');
+            },
+            error: function (error) {
+            }
+        });
+    };
+
+    // for update button
+    var updateFunction = function (event) {
+
+        setTimeout(function () {
+            $("#modalBox").modal("show");
+        }, 200);
+
+        var btn = event.target;
+        var productId = $(btn).data('product-id');
+        var updateUrl = $('#updateActionUrl').data('update-action-url');
+
+        $(btn).removeAttr('enabled');
+        $(btn).attr('disabled', 'disabled');
+
+        $.ajax({
+            type: 'GET',
+            url: updateUrl,
+            data: {
+                productId: productId
+            },
+            success: function (response) {
+                if (response && response.flag) {
+                    displayCurrentProductForUpdate(response.modelToDisplay);
+                }
+                else {
+                    alert("Error");
+                }
+
+                $(btn).removeAttr('disabled');
+                $(btn).attr('enabled', 'enabled');
+            },
+            error: function (error) {
+            }
+        });
+    };
+
+
+    var addToCart = function (event) {
+        var btn = event.target;
+        var productId = $(btn).data('product-id');
+        var quantityToBuy = $(btn).data('quantity-to-buy');
+
+        var addToCartUrl = $('#addProductToCartUrl').data('add-product-to-cart-url');
+
+        $(btn).removeAttr('enabled');
+        $(btn).attr('disabled', 'disabled');
+
+        $.ajax({
+            type: 'POST',
+            url: addToCartUrl,
+            data: {
+                productId: productId,
+                quantityToBuy: quantityToBuy
+            },
+            success: function (response) {
+                if (response && response.flag) {
+
+                }
+                else {
+                    alert("Error");
+                }
+
+                $(btn).removeAttr('disabled');
+                $(btn).attr('enabled', 'enabled');
+            },
+            error: function (error) {
+            }
+        });
+    }
+
+    //main
+    $('.deleteBtn').on('click', deleteFunction);
+    $('.updateBtn').on('click', updateFunction);
+    $('.updateBtnModal').on('click', updateDatabase);
+    $('.closeBtnModal').on('click', closeModal);
+    $('.addToCart').on('click', addToCart);
+
+    $("#defaultResultPage").infiniteScroll({
+        path: '@string.Format("{0}?currentPage={{{{#}}}}", Url.Action("ListProductDetailsByCategory", "ProductDetails"))' + '&categoryId=@Model.CategoryId',
+        append: '.product'
+    }).on('append.infiniteScroll', function (event, response) {
+        if (response) {
+            $('.updateBtn').unbind('click');
+            $('.updateBtn').bind('click', updateFunction);
+
+            $('.deleteBtn').unbind('click');
+            $('.deleteBtn').bind('click', deleteFunction);
+
+            $('.addToCart').unbind('click');
+            $('.addToCart').bind('click', addToCart);
+
+            $('.updateBtnModal').unbind('click');
+            $('.updateBtnModal').bind('click', updateDatabase);
+        }
+
+    });
+</script>

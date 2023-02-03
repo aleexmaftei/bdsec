@@ -1,0 +1,282 @@
+﻿@model eCommerce.Models.CartVM.CartListVM
+
+<link rel="stylesheet" href="~/css/cart.css" />
+
+<script src="https://js.braintreegateway.com/web/dropin/1.24.0/js/dropin.min.js"></script>
+
+<input type="hidden" id="removeFromCartUrl" data-remove-from-cart-url="@Url.Action("JsRemoveProductFromCart", "Cart")" />
+<input type="hidden" id="updateQuantityToBuy" data-update-quantity-to-buy-url="@Url.Action("UpdateQuantityToBuy", "Cart")" />
+
+
+<input type="hidden" id="addInvoice" data-add-invoice-url="@Url.Action("PlaceOrder", "Cart")" />
+<input type="hidden" id="checkoutPayment" data-checkout-payment-url="@Url.Action("CheckoutPayment", "Payment")" />
+<input type="hidden" id="checkTransaction" data-check-transaction-url="@Url.Action("CheckTransactionStatus", "Payment")" />
+<input type="hidden" id="billingAddress" data-billing-address-url="@Url.Action("AddPaymentAddress", "Payment")" />
+<input type="hidden" id="refundTransaction" data-refund-transaction-url="@Url.Action("RefundTransaction", "Payment")" />
+
+<input type="hidden" id="proceed" data-proceed-url="@Url.Action("Index", "Home")" />
+
+<div class="container">
+    <h2 class="pt-4 d-flex justify-content-center">Your basket</h2>
+
+    <!-- Basket -->
+    <div class="row pt-3 pb-5">
+        <div class="col-12">
+            @if (Model.CartList.Count != 0)
+            {
+                <div id="basket-article-list">
+                    <div class="basket">
+                        <table border="0">
+                            <tbody>
+                                <tr>
+                                    <th colspan="2">Article</th>
+                                    <th>Quantity</th>
+                                    <th class="float-right">Price</th>
+                                </tr>
+                                @for (int index = 0; index < Model.CartList.Count; index++)
+                                {
+                                    <!-- Products -->
+                                    <tr class="basket-article toDelete">
+                                        <!-- Product Image -->
+                                        <td class="image">
+                                            <div class="stackimage-wrapper stackimage-noStack stackimage-singleImage stackimage-default">
+                                                <div class="stackimage stackimage-noStack stackimage-singleImage stackimage-noStack-singleImage d-flex justify-content-center">
+                                                    <a asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                       asp-route-productId="@Model.CartList[index].ProductId">
+                                                        <img class="card-img" alt="" src="@Model.CartList[index].ProductImage" style="height:55px; width:auto;"/>
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <!-- Product Description -->
+                                        <td class="article-body rs-text">
+                                            <div class="title">
+                                                <div><p>@Model.CartList[index].ProductName</p></div>
+                                            </div>
+                                            <!-- Buttons -->
+                                            <div class="sub-links">
+                                                <a data-product-id="@Model.CartList[index].ProductId"
+                                                   class="sub-link deleteFromCart">
+                                                    Remove from cart
+                                                </a>
+                                            </div>
+                                        </td>
+
+                                        <!-- Quantity -->
+                                        <td class="amount">
+                                            <input type="number" id="quantityToBuy" name="quantityBuy" style="background-color:floralwhite;"
+                                                   value="@Model.CartList[index].QuantityBuy" step="1" min="1" max="200"
+                                                   data-product-id="@Model.CartList[index].ProductId" />
+                                        </td>
+
+                                        <!-- Price -->
+                                        <td class="price">
+                                            <div class="primary">@Model.CartList[index].ProductPrice</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="basket-article-components">
+                                        <td></td>
+                                        <td colspan="3" class="components rs-text"></td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td colspan="4" class="basket-article import-informations"></td>
+                                </tr>
+                                <tr colspan="4" class="components">
+                                </tr>
+                            </tbody>
+                            <!-- Total price area-->
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="sum">
+                                            <div class="primary">
+                                                <div class="title d-flex justify-content-end">Total: @Model.TotalSum</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center">
+                            <img src="@Url.Content("~/static/empty_basket.png")" style="height:200px;width:auto;" />
+                        </div>
+                        <div class="col-12 mt-4 d-flex justify-content-center text-black-50">
+                            <div class="font-weight-bold">Your basket it empty, please add items first!</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.CartList.Count != 0)
+    {
+        <!-- Delivery Location -->
+        <div class="row">
+            <div class="col-12">
+                <div class="adress-wrapper" style="display:block;">
+                    <div class="order-adresses-wrapper">
+
+                        @if (Model.DeliveryLocations.Count != 0)
+                        {
+                            <p class="adresses-text">Choose a billing address</p>
+                            <ul class="group order-existing-addresses">
+                                @for (int index = 0; index < Model.DeliveryLocations.Count; index++)
+                                {
+                                    <li id="location-@(index + 1)" onclick="setDeliveryLocation(@Model.DeliveryLocations[index].DeliveryLocationId, @Model.DeliveryLocations.Count, @(index + 1))">
+                                        @Model.DeliveryLocations[index].CountryName, @Model.DeliveryLocations[index].RegionName, @Model.DeliveryLocations[index].CityName
+                                        <br />
+                                        @Model.DeliveryLocations[index].AddressDetail, @Model.DeliveryLocations[index].PostalCode
+                                    </li>
+                                }
+                            </ul>
+
+                            <input type="hidden" id="deliveryLocationIdInput" value="@Model.DeliveryLocations[0].DeliveryLocationId" min="1" />
+
+                            <div id="dropin-wrapper" class="mt-5">
+                                <div id="checkout-message"></div>
+                                <div id="dropin-container"></div>
+
+                                <div id="basket-submit" class="rs-checkout-additionals d-flex justify-content-center">
+                                    <a id="checkoutButton" class="btn btn-primary btn-outline-info">
+                                        Checkout
+                                    </a>
+                                </div>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <p>Please add a Delivery Location first!</p>
+                            <!--buton spre insert-->
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+    function setDeliveryLocation(deliveryLocationId, arraySize, indexToAddClass) {
+        $('#deliveryLocationIdInput').val(deliveryLocationId);
+
+        for (var i = 0; i < arraySize; i++) {
+            $('#location-' + (i + 1)).removeClass('active');
+        }
+
+        $("#location-" + indexToAddClass).attr('class', 'active');
+    };
+
+
+
+    function addInvoice() {
+        var addInvoiceUrl = $('#addInvoice').data('add-invoice-url');
+
+        var deliveryLocationId = $('#deliveryLocationIdInput').val();
+        
+        $.ajax({
+            type: 'POST',
+            url: addInvoiceUrl,
+            data: {
+                deliveryLocationId: deliveryLocationId
+            },
+            success: function (response) {
+                if (response && response.flag) {
+                    console.log("Invoice Added! Redirecting...");
+                    window.location.href = proceed;
+                }
+                else {
+                    alert("Error at adding invoice");
+                }
+
+            },
+            error: function (error) {
+            }
+        });
+
+    };
+
+    function checkTransactionStatus(transactionId) {
+
+        var checkTransactionUrl = $('#checkTransaction').data('check-transaction-url');
+        $.ajax({
+            type: "GET",
+            url: checkTransactionUrl,
+            data: {
+                transactionId: transactionId
+            },
+            success: function (response) {
+                if (response && response.flag == true) {
+                    alert("Status OK... Adding invoice!");
+                    addInvoice();
+                }
+                else {
+                    alert("Error at accepting transaction!");
+                    
+                }
+            },
+            error: function (error) {
+
+            }
+
+        });
+    };
+
+    
+    var clientToken = "@ViewBag.ClientToken";
+    var totalSum = @ViewBag.TotalSum;
+
+    var button = document.querySelector('#checkoutButton');
+    var checkoutUrl = $('#checkoutPayment').data('checkout-payment-url');
+
+    var proceed = $('#proceed').data('proceed-url');
+
+    braintree.dropin.create({
+        authorization: clientToken,
+        container: '#dropin-container',
+    }, function (createErr, instance) {
+        button.addEventListener('click', function () {
+            instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+                $(button).removeAttr('enabled');
+                $(button).attr('disabled', 'disabled');
+                var deliveryLocationId = $('#deliveryLocationIdInput').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: checkoutUrl,
+                    data: {
+                        paymentMethodNonce: payload.nonce,
+                        totalSum: totalSum,
+                        deliveryLocationId: deliveryLocationId
+                    },
+                    success: function (response) {
+                        if (response && response.flag == true) {
+                            alert("Transaction Done! Checking transaction status...");
+                            checkTransactionStatus(response.transactionId);
+                        }
+                        else {
+                            alert("Error at authorization... Refreshing page...");
+                            location.reload(true);
+                        }
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            });
+        });
+    });
+</script>
+

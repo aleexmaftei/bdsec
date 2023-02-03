@@ -1,0 +1,11 @@
+﻿
+.category {
+    font-family: "Open Sans", Verdana, Tahoma, Arial, Helvetica, sans-serif;
+    text-decoration: none !important;
+    cursor: pointer;
+    color: rgb(23, 23, 23);
+}
+
+.category:hover {
+    color: darkcyan;
+}

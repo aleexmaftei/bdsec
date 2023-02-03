@@ -1,0 +1,97 @@
+﻿@model eCommerce.Models.MyProfileVM.AllInvoicesVM
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<!-- Side Bar -->
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Invoices
+    </h2>
+
+    <div class="row pt-4">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    @if (CurrentUser.IsAdmin == true)
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My profile</a>
+                        </li>
+                    }
+
+                    <li class="is-active">
+                        <a asp-controller="MyProfile" asp-action="Invoices">
+                            View Invoices
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="UserAccount" asp-action="ChangePassword">
+                            Change password
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="ViewDeliveryLocations">
+                            Update delivery locations
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="InsertDeliveryLocation">
+                            Add new delivery adress
+                        </a>
+                    </li>
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- View Invoices -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        @if (Model.AllInvoices.Count == 0)
+                        {
+                            <p class="widget-title mb-3">No Invoices to show buy products first!</p>
+                        }
+
+                        @foreach (var allInvoices in Model.AllInvoices)
+                        {
+                            <p>Invoice number: @allInvoices.UserInvoiceId</p>
+                            <p>Date buy: @allInvoices.DateBuy</p>
+
+                            @foreach (var currentProductInvoice in allInvoices.InvoiceList)
+                            {
+                                <p>Product Name: @currentProductInvoice.ProductName <span class="text-danger"> Quantity: @currentProductInvoice.QuantityBuy</span></p>
+                            }
+
+                            <hr />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+﻿@model eCommerce.Models.UserAccountVM.RegisterVM
+
+@{
+    Layout = "";
+}
+
+<link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+<link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
+
+<link rel="stylesheet" href="~/css/site.css" />
+<link rel="stylesheet" href="~/css/register.css" />
+
+
+<div class="container">
+
+    <div class="row w-100 d-flex justify-content-center">
+        <form asp-action="Register" asp-controller="UserAccount">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-12 d-flex justify-content-center">
+                <h2 class="title">Hello!</h2>
+            </div>
+
+            <p class="d-flex justify-content-center info-text">Please complete the form below to register</p>
+            <hr />
+            <div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6 side-by-side form-group" style="padding-right:15px;">
+                            <label asp-for="FirstName" class="control-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-6 side-by-side form-group">
+                            <label asp-for="LastName" class="control-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="subheader-text">Delivery adress</p>
+                <hr />
+
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="CountryName" class="control-label"></label>
+                        <input asp-for="CountryName" class="form-control" />
+                        <span asp-validation-for="CountryName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="RegionName" class="control-label"></label>
+                        <input asp-for="RegionName" class="form-control" />
+                        <span asp-validation-for="RegionName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="AddressDetail" class="control-label"></label>
+                        <input asp-for="AddressDetail" class="form-control" />
+                        <span asp-validation-for="AddressDetail" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-8 side-by-side form-group" style="padding-right:15px;">
+                            <div class="form-group">
+                                <label asp-for="CityName" class="control-label"></label>
+                                <input asp-for="CityName" class="form-control" />
+                                <span asp-validation-for="CityName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4 side-by-side form-group">
+                            <label asp-for="PostalCode" class="control-label"></label>
+                            <input asp-for="PostalCode" class="form-control" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            
+            <div class="form-group col-12 d-flex justify-content-center">
+                <input type="submit" value="Register" class="btn btn-primary" />
+                <a href="/Home" class="ml-5 text-danger">Cancel</a>
+            </div>
+        </form>
+        
+    </div>
+</div>

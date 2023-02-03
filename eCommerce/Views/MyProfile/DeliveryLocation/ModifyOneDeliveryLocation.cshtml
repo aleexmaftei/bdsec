@@ -1,0 +1,139 @@
+﻿@model eCommerce.Models.MyProfileVM.DeliveryLocation.DeliveryLocationVm
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<script src="~/js/myProfile/deliveryLocation.js"></script>
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<input type="hidden" id="deleteDeliveryLocationUrl" data-delete-delivery-location-url="@Url.Action("DeleteDeliveryAdress", "MyProfile")" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Update delivery location
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-4">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    @if (CurrentUser.IsAdmin == true)
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My profile</a>
+                        </li>
+                    }
+
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Invoices">
+                            View Invoices
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="UserAccount" asp-action="ChangePassword">
+                            Change password
+                        </a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="MyProfile" asp-action="ViewDeliveryLocations">
+                            Update delivery locations
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="InsertDeliveryLocation">
+                            Add new delivery adress
+                        </a>
+                    </li>
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        <form method="post">
+                            <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CountryName" class="control-label"></label>
+                                        <input asp-for="CountryName" class="form-control CountryName" />
+                                        <span asp-validation-for="CountryName" text-danger" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="RegionName" class="control-label"></label>
+                                        <input asp-for="RegionName" class="form-control RegionName" />
+                                        <span asp-validation-for="RegionName" text-danger" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="CityName" class="control-label"></label>
+                                        <input asp-for="CityName" class="form-control CityName" />
+                                        <span asp-validation-for="CityName" class="text-danger" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-8 side-by-side form-group" style="padding-right:15px;">
+                                            <div class="form-group">
+                                                <label asp-for="AddressDetail" class="control-label"></label>
+                                                <input asp-for="AddressDetail" class="form-control AddressDetail" />
+                                                <span asp-validation-for="AddressDetail" class="text-danger" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-4 side-by-side form-group">
+                                            <label asp-for="PostalCode" class="control-label"></label>
+                                            <input asp-for="PostalCode" class="form-control PostalCode" />
+                                            <span asp-validation-for="PostalCode" class="text-danger" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12 d-flex justify-content-center">
+                                    <input type="submit" value="Update" class="btn btn-primary"
+                                           asp-controller="MyProfile" asp-action="ModifyOneDeliveryLocation"
+                                           asp-route-deliveryLocationId="@Model.DeliveryLocationId" />
+
+                                    <input type="submit" value="Delete" class="ml-3 btn btn-danger deleteDeliveryLocationBtn"
+                                           data-delivery-location-id="@Model.DeliveryLocationId" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

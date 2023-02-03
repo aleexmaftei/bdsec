@@ -1,0 +1,375 @@
+﻿@model eCommerce.Models.ProductVM.ProductInfoVM
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<script src="~/js/products/productView.js"></script>
+
+<link rel="stylesheet" href="~/css/filterProducts.css" />
+<link rel="stylesheet" href="~/css/products.css" />
+<link rel="stylesheet" href="~/css/productDetails.css" />
+
+<input type="hidden" id="addProductToCartUrl" data-add-product-to-cart-url="@Url.Action("AddProductToCart", "Cart")" />
+<input type="hidden" id="deleteProductCommentUrl" data-delete-product-comment-url="@Url.Action("DeleteProductComment", "Admin")" />
+
+<div class="row">
+    <!-- Header -->
+    <div class="col-9 mt-4 pl-4">
+        <div class="row">
+            <!-- Title -->
+            <div class="col-8 headline clearfix">
+                <h1>
+                    @Model.ProductDetails.ManufacturerName @Model.ProductDetails.ProductName
+                </h1>
+                <!-- Ratings -->
+                <div class="subline rs-text">
+                    <div class="ratings">
+                        <div>
+                            <span style="width:95%">
+                                <span class="inner">
+                                    @if (Model.AvgStars == 5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                    }
+                                    else if (4.5 <= Model.AvgStars && Model.AvgStars < 5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star-half-alt rating-star" />
+                                    }
+                                    else if (4 <= Model.AvgStars && Model.AvgStars < 4.5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (3.5 <= Model.AvgStars && Model.AvgStars < 4)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star-half-alt rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (3 <= Model.AvgStars && Model.AvgStars < 3.5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (2.5 <= Model.AvgStars && Model.AvgStars < 3)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star-half-alt rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (2 <= Model.AvgStars && Model.AvgStars < 2.5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (1.5 <= Model.AvgStars && Model.AvgStars < 2)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="fas fa-star-half-alt rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (1 <= Model.AvgStars && Model.AvgStars < 1.5)
+                                    {
+                                        <span class="fas fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (0.5 <= Model.AvgStars && Model.AvgStars < 1)
+                                    {
+                                        <span class="fas fa-star-half-alt rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+                                    else if (0 <= Model.AvgStars && Model.AvgStars < 0.5)
+                                    {
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                        <span class="far fa-star rating-star" />
+                                    }
+
+                                </span>
+                            </span>
+
+                            <span class="text">
+                                @Model.NumberOfEvaluations ratings
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logo -->
+            <div class="col-4 manufacturer-logo">
+                <a href="#">
+                    <img src="@Model.ProductDetails.ManufacturerLogo" style="height:40px;width:auto;"/>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="col-9 mt-2 rs-prod-media-gallery">
+        <div class="media-gallery">
+            <div class="prod-media-spot-container">
+                <div class="prod-media-spot d-flex justify-content-center">
+                    <div>
+                        <img src="@Model.ProductDetails.ProductImage" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="col-9 d-flex justify-content-center clearfix additional-info">
+        <div class="row">
+            <div class="col-12">
+                <h2>Additional Information</h2>
+            </div>
+
+            <div class="col-12">
+                <table class="rs-text">
+                    <tbody>
+                        @foreach (var productDetail in Model.ProductDetails.AllPropertiesWithValues)
+                        {
+                            <tr>
+                                <th>@productDetail.PropertyName</th>
+                                <td>@productDetail.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-3">
+        <div class="rs-sidebar-box">
+            <div class="row">
+                <!-- Price and availability -->
+                <div class="col-12 price-and-availability">
+                    <div class="row">
+                        <div class="col-12 prod-pricebox-price d-flex justify-content-center">
+                            <div class="price-wrapper">
+                                <span class="price">@Model.ProductDetails.ProductPrice$</span>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 availability rs-layover-trigger tr-availability-layover d-flex justify-content-center">
+                            <a style="cursor: default;">
+                                @if (Model.Quantity > 0)
+                                {
+                                    <div class="tr-prod-availability-in d-flex justify-content-center" style="font-size: 18px;">
+                                        In stock
+                                    </div>
+                                }
+                                else if (Model.Quantity == 0)
+                                {
+                                    <div class="tr-prod-availability-out d-flex justify-content-center" style="font-size: 18px;">
+                                        Out of Stock
+                                    </div>
+                                }
+                                else if (Model.IsDeleted == true)
+                                {
+                                    <div class="d-flex justify-content-center" style="color:indianred;font-size: 17px;">
+                                        Sorry, we are no longer selling this product
+                                    </div>
+                                }
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Add to cart button -->
+                @if (Model.Quantity != 0 && CurrentUser.IsAuthenticated)
+                {
+                    <div class="col-12 add-action-wrapper">
+                        <form>
+                            <div class="add-to-basket clearfix">
+                                <!-- Quantity to buy -->
+                                <div class="rs-input input">
+                                    <div class="input-container">
+                                        <div class="input">
+                                            <input class="field plain" id="quantityToBuy"
+                                                   type="number" value="@Model.ProductDetails.QuantityBuy" min="1" max="100" autocomplete="off" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add Button -->
+                                <button type="submit" class="btn btn-primary add-button" id="addToCart"
+                                        data-product-id="@Model.ProductDetails.ProductId">
+                                    Add To Cart
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                }
+
+                @if (CurrentUser.IsAuthenticated == false)
+                {
+                    <div class="col-12">
+                        <ul class="btn-group list-unstyled d-flex justify-content-center">
+                            <li class="pl-2 mb-2 mb-md-0">
+                                <button type="button" data-toggle="modal" data-target="#modalLogin"
+                                        class="btn btn-outline-primary btn-md btn-rounded btn-navbar">
+                                    Sign in to add
+                                </button>
+                            </li>
+
+                            <li class="pl-2 mb-2 mb-md-0">
+                                <a asp-controller="UserAccount" asp-action="Register" type="button"
+                                   class="btn btn-outline-info btn-md btn-rounded btn-navbar">Register to add</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Review Section -->
+<div class="row ml-4 mr-4 mt-2">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-10">
+                <h2 class="">Product Reviews</h2>
+            </div>
+
+            <div class="col-2">
+                @if(CurrentUser.IsAuthenticated == true)
+                {
+                    <form method="get">
+                        <a type="submit" class="btn btn-primary mr-2"
+                            asp-controller="ProductComments" asp-action="AddComment"
+                            asp-route-productId="@Model.ProductDetails.ProductId">
+                            Add a review
+                        </a>
+                    </form>
+                }
+                else
+                {
+                    <p>Login/register to comment!</p>
+                }
+            </div>
+        </div>
+
+        <hr />
+    </div>
+
+    @if (Model.ProductComments.Count != 0)
+    {
+        @foreach (var productComment in Model.ProductComments)
+        {
+            <div class="col-12 product-review-item divToDelete">
+                <div class="row">
+                    <!-- Profile Details -->
+                    <div class="col-md-2">
+                        <div class="product-review-head">
+                            <div class="product-review-user-meta">
+
+                                <p class="product-review-author mrg-top-xs semibold">
+                                    @productComment.UserNameComment
+                                </p>
+
+                                <p class="small text-muted mrg-sep-none">
+                                    @productComment.CommentDate
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comment Section -->
+                    <div class="col-md-10">
+                        <div class="product-review-body">
+                            <h3 class="product-review-title">
+                                @productComment.CommentTitle
+                            </h3>
+
+                            <!-- Rating -->
+                            <div class="subline rs-text mb-3">
+                                <div class="ratings">
+                                    <div>
+                                        <span style="width:95%">
+                                            <span class="inner">
+                                                <!-- if-uri ca sa fie cat trebuie -->
+                                                @for (int i = 1; i <= productComment.ProductRating; i++)
+                                                {
+                                                    <span class="fas fa-star rating-star" />
+                                                }
+                                                @for (int i = 1; i <= 5 - productComment.ProductRating; i++)
+                                                {
+                                                    <span class="far fa-star rating-star" />
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mrg-btm-xs review-body-container">
+                                <div class="row">
+                                    <div class="col-8">
+                                        @productComment.Comment
+                                    </div>
+
+                                    @if (CurrentUser.IsAdmin == true)
+                                    {
+                                        <div class="col-4">
+                                            <button class="ml-3 btn btn-danger deleteProductCommentBtn"
+                                               data-product-comment-id="@productComment.ProductCommentId">
+                                                Delete Comment
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            }
+            }
+            else
+            {
+        
+            <div class="col-12 mb-5">
+                <h2 class="d-flex justify-content-center">No reviews for this product! Be the first to evaluate it!</h2>
+            </div>
+            }
+        </div>

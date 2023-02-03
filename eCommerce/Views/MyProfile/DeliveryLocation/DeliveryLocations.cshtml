@@ -1,0 +1,124 @@
+﻿@model eCommerce.Models.MyProfileVM.DeliveryLocation.ListDeliveryLocationVm
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<script src="~/js/myProfile/deliveryLocation.js"></script>
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<input type="hidden" id="deleteDeliveryLocationUrl" data-delete-delivery-location-url="@Url.Action("DeleteDeliveryAdress", "MyProfile")" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Update delivery locations
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-4">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    @if (CurrentUser.IsAdmin == true)
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="MyProfile" asp-action="Index">My profile</a>
+                        </li>
+                    }
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Invoices">
+                            View Invoices
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="UserAccount" asp-action="ChangePassword">
+                            Change password
+                        </a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="MyProfile" asp-action="ViewDeliveryLocations">
+                            Update delivery locations
+                        </a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="InsertDeliveryLocation">
+                            Add new delivery adress
+                        </a>
+                    </li>
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Delivery Locations -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        @for (int index = 0; index < Model.DeliveryLocations.Count; index++)
+                        {
+                            <div class="row">
+                                <div class="col-6 user-data-col">
+                                    <p><span class="field-value">Country Name: @Model.DeliveryLocations[index].CountryName</span></p>
+
+                                    <p><span class="field-value">Region Name: @Model.DeliveryLocations[index].RegionName</span></p>
+
+                                    <p><span class="field-value">City Name: @Model.DeliveryLocations[index].CityName</span></p>
+                                </div>
+
+                                <div class="col-6 user-data-col">
+                                    <p><span class="field-value">Address: @Model.DeliveryLocations[index].AddressDetail</span></p>
+
+                                    <p><span class="field-value">Postal Code: @Model.DeliveryLocations[index].PostalCode</span></p>
+                                </div>
+
+                                <div class="col-12 d-flex justify-content-center">
+
+                                    <form method="get">
+                                        <a class="btn btn-primary"
+                                           asp-controller="MyProfile" asp-action="ModifyOneDeliveryLocation"
+                                           asp-route-deliveryLocationId="@Model.DeliveryLocations[index].DeliveryLocationId">
+                                            Update
+                                        </a>
+                                    </form>
+
+
+                                    <button class="btn btn-danger ml-3 deleteDeliveryLocationBtn"
+                                            data-delivery-location-id="@Model.DeliveryLocations[index].DeliveryLocationId">
+                                        Delete
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            if (index != Model.DeliveryLocations.Count - 1)
+                            {
+                                <hr />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

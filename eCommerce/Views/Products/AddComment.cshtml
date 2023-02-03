@@ -1,0 +1,98 @@
+﻿@model eCommerce.Models.ProductVM.ProductCommentVM
+
+<script src="~/js/products/addComment.js"></script>
+
+<link rel="stylesheet" href="~/css/productDetails.css" />
+<link rel="stylesheet" href="~/css/products/productReview.css" />
+
+<!-- Rating Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-5">
+            <form method="post">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="review-user-rating">
+                                Rating:
+                            </label>
+                            <div>
+                                <div id="review-user-rating-component">
+                                    <div class="ratings">
+                                        <div style="width:100%">
+                                            <span id="stars">
+                                                <span id="star1" class="far fa-star rating-star" data-rating="1" />
+                                                <span id="star2" class="far fa-star rating-star" data-rating="2" />
+                                                <span id="star3" class="far fa-star rating-star" data-rating="3" />
+                                                <span id="star4" class="far fa-star rating-star" data-rating="4" />
+                                                <span id="star5" class="far fa-star rating-star" data-rating="5" />
+                                            </span>
+
+                                            <input type="hidden" id="lblRating" value="0" asp-for="ProductRating" />
+                                            @Html.HiddenFor(x => x.ProductRating)
+                                            <span class="text">
+                                                Rate the product
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Comment section -->
+                <div class="row">
+                    <div class="col-12 mt-3">
+                        <label for="review-body">Review:</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <textarea class="form-control review-content" id="review-body" rows="7"
+                                      placeholder="Describe your experience with the product" required
+                                      asp-for="Comment"></textarea>
+                            @Html.HiddenFor(x => x.Comment)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <label for="title">Title Review:</label>
+                        <div class="form-group">
+                            <input class="form-control" id="title"
+                                   placeholder="Write a title for your review"
+                                   asp-for="CommentTitle" />
+                            @Html.HiddenFor(x => x.CommentTitle)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <hr />
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center mb-5">
+                        <button type="submit" class="btn btn-lg btn-primary"
+                                asp-controller="ProductComments" asp-action="AddComment"
+                                asp-route-productId="@Model.ProductId">
+                            Add the review
+                        </button>
+
+                        <a class="btn btn-lg btn-link"
+                           asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                           asp-route-productId="@Model.ProductId">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</div>

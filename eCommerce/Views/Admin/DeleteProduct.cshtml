@@ -1,0 +1,72 @@
+﻿@model eCommerce.Models.AdminVM.AdminSoftDeleteVM
+
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Delete a product
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-4">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="AdminAddCategoryPick">Add a product</a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="Admin" asp-action="SoftDeleteProduct">Delete a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="RegisterAdmin">Add admin</a>
+                    </li>
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+                
+                </ul>
+            </div>
+        </div>
+
+        <!-- Delete a product -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        <form asp-controller="Admin" asp-action="SoftDeleteProduct">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="form-group">
+                                <label asp-for="ProductId" class="control-label"></label>
+                                <input asp-for="ProductId" class="form-control" />
+                                <span asp-validation-for="ProductId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group d-flex justify-content-center">
+                                <input type="submit" value="Delete product" class="btn btn-primary" />
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

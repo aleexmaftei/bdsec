@@ -1,0 +1,151 @@
+﻿@model eCommerce.Models.AdminVM.AdminAddVM
+
+
+<link rel="stylesheet" href="~/css/myProfile.css" />
+
+<div class="container pb-5">
+    <h2 class="d-flex justify-content-center pt-4">
+        Add a product
+    </h2>
+
+    <!-- Side Bar -->
+    <div class="row pt-3">
+        <div class="col-3 menu-container">
+            <div class="user-account-sidebar pad-hrz-sm pad-sep-xs">
+                <ul class="user-account-menu list-unstyled m-0 p-0">
+                    <li>
+                        <a asp-controller="MyProfile" asp-action="Index">My user profile</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="AdminProfile">My admin profile</a>
+                    </li>
+
+                    <li class="is-active">
+                        <a asp-controller="Admin" asp-action="AdminAddCategoryPick">Add a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="SoftDeleteProduct">Delete a product</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Admin" asp-action="RegisterAdmin">Add a new admin</a>
+                    </li>
+
+
+                    <li>
+                        <form method="post">
+                            <a type="submit" style="color:orangered;"
+                               asp-controller="UserAccount" asp-action="DeleteMyAccount">
+                                Delete my account
+                            </a>
+                        </form>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Add product -->
+        <div class="col-9">
+            <div class="user-dashboard-slot">
+                <div class="panel panel-default user-account-panel min-height-panel">
+                    <div class="panel-body">
+                        <p class="widget-title mb-3">Insert product details</p>
+
+                        <form asp-action="AddProduct">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label asp-for="ProductName" class="control-label mb-0"></label>
+                                        <input asp-for="ProductName" class="form-control" />
+                                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="ProductPrice" class="control-label mb-0"></label>
+                                        <input asp-for="ProductPrice" value="1" min="1" class="form-control" />
+                                        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="Quantity" class="control-label mb-0"></label>
+                                        <input asp-for="Quantity" class="form-control" value="1" min="1" />
+                                        <span asp-validation-for="Quantity" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label asp-for="ProductImage" class="control-label mb-0"></label>
+                                        <input type="file" accept="image/*" class="form-control" id="inputFileToLoad" onchange="encodeImageFile();">
+                                        <span asp-validation-for="ProductImage" class="text-danger"></span>
+                                        <input type="hidden" asp-for="ProductImage" id="imgTest">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="subheader-text">Product Details</p>
+                            <hr />
+
+                            <div class="row">
+                                
+                                @Html.HiddenFor(x => x.ManufacturerId)
+                                @Html.HiddenFor(x => x.ProductCategoryId)
+
+                                @for (int i = 0; i < Model.ProductPropertiesWithValues.Count; i++)
+                                {
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label asp-for="@Model.ProductPropertiesWithValues[i].DetailValue" class="control-label mb-0">@Model.ProductPropertiesWithValues[i].PropertyName</label>
+                                            <input asp-for="@Model.ProductPropertiesWithValues[i].DetailValue" class="form-control" />
+                                            <span asp-validation-for="@Model.ProductPropertiesWithValues[i].DetailValue" class="text-danger"></span>
+
+                                            @Html.HiddenFor(x => x.ProductPropertiesWithValues[i].PropertyName)
+                                            @Html.HiddenFor(x => x.ProductPropertiesWithValues[i].PropertyId)
+
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            
+
+                            <div class="form-group d-flex justify-content-center">
+                                <input type="submit" value="Add product" class="btn btn-primary" />
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function encodeImageFile() {
+
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+
+            var fileReader = new FileReader();
+
+            fileReader.onload = function (fileLoadedEvent) {
+                var srcData = fileLoadedEvent.target.result; 
+                $('#imgTest').val(srcData);
+            }
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+</script>

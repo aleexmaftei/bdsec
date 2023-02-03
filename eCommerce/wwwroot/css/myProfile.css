@@ -1,0 +1,162 @@
+﻿
+.container {
+    padding-left:0;
+    padding-right:0;
+}
+/* Sidebar */
+@media (min-width: 768px) {
+    .menu-container {
+        float: left;
+        width: 243px;
+        padding-right: 15px;
+
+    }
+}
+
+
+.menu-container {
+    display: block;
+    width: 100%;
+    background-color: #F8F8F8;
+    border: 1px solid #CDCDCD;
+    border-radius: 6px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.10);
+}
+
+.user-account-menu {
+    margin: 0;
+    padding: 0;
+}
+
+
+.pad-hrz-sm {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.pad-sep-xs {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+
+.user-account-sidebar .user-account-menu li.is-active a {
+    color: darkcyan;
+    position: relative;
+}
+
+.user-account-sidebar .user-account-menu li {
+    border-bottom: 1px solid #CDCDCD;
+}
+
+.user-account-sidebar .user-account-menu li:last-child {
+    border-bottom: 0;
+}
+
+.user-account-sidebar .user-account-menu li a {
+    text-decoration: none;
+    display: block;
+    padding: 10px 0;
+    font-weight: 600;
+    color: royalblue;
+}
+
+
+.user-account-sidebar .user-account-menu li a:hover {
+    color: darkcyan;
+    text-decoration: underline;
+}
+
+/* account details */
+@media (max-width: 768px) {
+    .panel-body {
+        padding: 0;
+    }
+}
+
+.panel {
+    border: 1px solid #CDCDCD;
+    border-radius: 6px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.15);
+}
+
+.panel-body {
+    position: relative;
+    display: block;
+    padding-top: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+}
+
+.widget-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+}
+
+.user-data-col {
+    line-height: 22px;
+}
+
+.field-name {
+    color: #666;
+    width: 55px;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .field-value {        
+        min-width: 145px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.field-value {
+    max-width: 500px;
+    display: block;
+    vertical-align: bottom;
+    white-space: nowrap;
+}
+
+.panel-footer:hover {
+    background-color: lightcyan;
+}
+
+.user-account-panel .panel-footer a {
+    border-top: 2px solid #eee;
+    padding: 15px 30px;
+    display: block;
+}
+
+.panel-footer-delivery {
+    padding: 15px 30px;
+    display: block;
+}
+
+.panel-footer-delivery:hover {
+    background-color: lightcyan;
+}
+
+.text-dashboard-primary {
+    color: #0082e6;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+.side-by-side {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.subheader-text {
+    font-size: 11px;
+    margin-left: 15px;
+    margin-bottom: -15px;
+    margin-top: 20px;
+    color: dimgray;
+}

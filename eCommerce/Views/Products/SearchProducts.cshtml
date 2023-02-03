@@ -1,0 +1,227 @@
+﻿@model eCommerce.Models.ProductVM.ProductsWithValues.AllProductsVM
+@inject eCommerce.Entities.DTOs.CurrentUserDto CurrentUser
+
+<script src="~/js/products/products.js"></script>
+<script src="~/js/products/filter.js"></script>
+
+<link rel="stylesheet" href="~/css/products.css" />
+<link rel="stylesheet" href="~/css/filterProducts.css" />
+
+<input type="hidden" id="deleteActionUrl" data-delete-action-url="@Url.Action("SoftDeleteProduct", "Admin")" />
+<input type="hidden" id="updateActionUrl" data-update-action-url="@Url.Action("UpdateProduct", "Admin")" />
+<input type="hidden" id="addProductToCartUrl" data-add-product-to-cart-url="@Url.Action("AddProductToCart", "Cart")" />
+
+<input type="hidden" id="applyFiltersUrl" data-apply-filters-url="@Url.Action("ListProductDetailsByCategory", "ProductDetails")" />
+
+<div class="row">
+    <div class="grid-container">
+        <div class="row">
+            <div class="col-12">
+                @if (Model.ProductsCount == 0)
+                {
+                    <h3 class="mb-5 mt-5 ml-5">
+                        Sorry, no items match your criteria.
+                    </h3>
+                }
+                else
+                {
+                    <!-- Product List -->
+                    <div class="phat grid-section" id="productList">
+                        <!-- HEADER -->
+                        <div class="rs-search-dir rs-search-header">
+                            <h1>Search Result</h1>
+                            <div class="subtitle">
+                                <span class="result-count">@Model.ProductsCount results.</span>
+                                <br />
+                            </div>
+                        </div>
+                        <!-- Products -->
+                        <div class="rs-search-dir rs-search-list">
+                            <div class="rs-search-list-react"></div>
+                            <div id="resultsContainer" class="results">
+                                <div id="defaultResultPage" class="pr-4 response articles-list">
+                                    @foreach (var product in Model.Allproducts)
+                                    {
+                                        <div class="extensible-article list-view compare parent divToDelete">
+                                            <!-- Product Image -->
+                                            <div class="left">
+                                                <div class="product-image image-block">
+                                                    <a class="article-link link"
+                                                       asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                       asp-route-productId="@product.ProductId">
+                                                        <img class="image" src="@product.ProductImage"
+                                                             style="height:190px;width:auto;" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Product Details-->
+                                            <div class="right">
+                                                <div class="top">
+                                                    <!-- Product Name + brand-->
+                                                    <div class="head">
+                                                        <a class="article-link link"
+                                                           asp-controller="ProductDetails" asp-action="ViewFullSpecsProduct"
+                                                           asp-route-productId="@product.ProductId">
+
+                                                            <div class="title-block link-group">
+                                                                <span class="manufacturer">@product.ManufacturerName</span>
+                                                                <span class="model">@product.ProductName</span>
+                                                            </div>
+
+                                                            <div class="subline">
+                                                                <div class="subtitle-block">
+                                                                    <div>@product.AllPropertiesWithValues[0].Value  <span class="fas fa-chevron-right fa-xs"></span>  @product.AllPropertiesWithValues[1].Value</div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="features-block">
+                                                                <ul class="prod-features">
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[4].PropertyName: @product.AllPropertiesWithValues[4].Value</div>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[6].PropertyName: @product.AllPropertiesWithValues[6].Value</div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[5].PropertyName: @product.AllPropertiesWithValues[5].Value</div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <div><span class="fas fa-angle-double-right fa-1x" aria-hidden="true"></span>  @product.AllPropertiesWithValues[12].PropertyName: @product.AllPropertiesWithValues[12].Value</div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                    <!-- Price -->
+                                                    <div class="body">
+                                                        <div class="price-block">
+                                                            <div class="primary">
+                                                                <span class="article-basketlink">@product.ProductPrice $</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="manufacturer-block">
+                                                            <div class="rs-tooltip-trigger rs-tooltip-ready">
+                                                                <a class="link" title="">
+                                                                    <img class="image" src="@product.ManufacturerLogo" />
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="tail">
+                                                        <div class="availability-block">
+                                                            <div class="rs-layover-trigger tr-availability-layover rs-tooltip-ready">
+                                                                <a style="cursor:default;">
+                                                                    @if (product.Quantity != 0)
+                                                                    {
+                                                                        <div class="tr-prod-availability tr-prod-availability-in">
+                                                                            <span class="fas fa-battery-full fa-1x"></span>  In stock
+
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="tr-prod-availability tr-prod-availability-out">
+                                                                            <span class="fas fa-battery-empty fa-1x"></span>  Out of Stock
+                                                                        </div>
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Admin Buttons -->
+                                                        @if (CurrentUser.IsAdmin == true)
+                                                        {
+                                                            <div id="admin-buttons" class="d-flex justify-content-center">
+                                                                <button type="button" data-target="#modalBox" data-toggle="modal"
+                                                                        data-product-id="@product.ProductId"
+                                                                        class="updateBtn button as-plain btn">
+                                                                    Update
+                                                                </button>
+
+                                                                <button type="button" data-product-id="@product.ProductId"
+                                                                        class="deleteBtn button as-plain btn">
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        }
+
+                                                        @if (CurrentUser.IsAuthenticated)
+                                                        {
+                                                            <div class="controls-block">
+                                                                <div class="item add-to-basket">
+                                                                    <form method="post">
+                                                                        <button type="submit" data-product-id="@product.ProductId" data-quantity-to-buy="1"
+                                                                                class="button as-plain btn float-right addToCart">
+                                                                            <span class="fas fa-shopping-cart pr-2"></span>Add to Cart
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="controls-block">
+                                                                <div class="item add-to-basket">
+                                                                    <a class="btn button as-plain float-right addToCart" style="cursor:not-allowed;">
+                                                                        Sign In to add
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Product Update-->
+<div class="modal fade" id="modalBox" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalLabel">Update selected product</h4>
+                <button type="button" class="close closeBtnModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label asp-for="AdminUpdateDetails.ProductName" class="control-label"></label>
+                        <input asp-for="AdminUpdateDetails.ProductName" id="productNameInput" class="form-control" />
+                        <span asp-validation-for="AdminUpdateDetails.ProductName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group insertAfterThis">
+                        <label asp-for="AdminUpdateDetails.Quantity" class="control-label"></label>
+                        <input asp-for="AdminUpdateDetails.Quantity" id="quantityInput" class="form-control" />
+                        <span asp-validation-for="AdminUpdateDetails.Quantity" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary closeBtnModal">Close</button>
+
+                    <input type="submit" value="Update product"
+                           class="btn btn-primary updateBtnModal" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
